@@ -1,0 +1,658 @@
+<title>Freight Forwarder Advance Payment</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Single light theme by choice: matches the E-Sourcing corporate UI */
+:root{color-scheme:light;--pri:#27298A;--pri-soft:#EEF0FF;--pri-line:#C5CAF5;--band:#E8EAF6;--bg:#F8F9FC;--ink:#1B2433;--muted:#4A5568;--muted2:#5B6678;--line:#E4E7EC;--inp:#CBD2DC;--th:#F4F5F9;--ap:#C9DCFB;--ac:#E3E5E8;--danger:#B42318;--ok:#1B7F3B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:'Roboto','Noto Sans Thai',system-ui,sans-serif;color:var(--ink);font-size:14px}
+button,input,select,textarea{font-family:inherit}
+.top{min-height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-block:8px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));gap:12px}
+.brand b{display:block;font-size:15px}.brand span{font-size:12px;color:var(--muted2)}
+.pill{display:flex;align-items:center;gap:10px;background:#fff;border-radius:28px;box-shadow:0 2px 10px rgba(27,36,51,.12);padding:6px 14px 6px 8px}
+.avatar{width:38px;height:38px;border-radius:19px;background:#3F3BBF;display:flex;align-items:center;justify-content:center;flex:none}
+.pill .who{display:flex;flex-direction:column;line-height:1.2}
+.pill .who small{font-size:11px;color:var(--muted2)}
+.pill select{border:0;background:transparent;font-weight:700;font-size:13px;color:var(--ink);cursor:pointer;max-width:260px;padding:0}
+.wrap{max-width:1560px;margin:0 auto;padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.pill{min-width:0;max-width:100%}.pill select{max-width:min(260px,60vw)}
+.btn:focus-visible,.chip:focus-visible,.back:focus-visible,.pager button:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.pagehead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:2px solid var(--pri)}
+h1{margin:0;font-size:26px;font-weight:700;color:var(--pri);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sub{font-size:13px;color:var(--muted);margin-top:4px}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--pri);background:none;border:0;padding:0;margin-bottom:8px;cursor:pointer;font-weight:600}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{height:40px;padding:0 20px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid #B8C1CE;background:#fff;color:var(--ink);white-space:nowrap}
+.btn:hover{filter:brightness(.97)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.danger{border-color:#E5A3A3;color:var(--danger)}
+.btn.round{border-radius:20px;padding:0 22px;font-weight:700}
+.btn.sm{height:32px;padding:0 12px;font-size:13px}
+.card{margin-top:22px;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(27,36,51,.1);overflow:hidden}
+.card-h{min-height:52px;background:var(--pri);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 18px;font-size:16px;font-weight:700}
+.card-h.ac{background:#4A5568}
+.card-h small{font-weight:400;font-size:12px;opacity:.85}
+.band{display:flex;align-items:center;gap:10px;padding:10px 20px;background:var(--band);color:var(--pri);font-size:14px;font-weight:700}
+.count{background:var(--pri);color:#fff;border-radius:11px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;padding:0 6px}
+.tscroll{overflow-x:auto}
+table.grid{width:100%;border-collapse:collapse}
+.grid th{background:var(--th);font-size:11.5px;font-weight:700;color:#344054;letter-spacing:.03em;text-align:left;padding:12px 14px;text-transform:uppercase;white-space:nowrap}
+.grid td{padding:10px 14px;border-top:1px solid var(--line);font-size:13px;vertical-align:middle}
+.grid tr.click{cursor:pointer}.grid tr.click:hover td{background:#F7F8FD}
+.grid .empty{padding:34px 20px;text-align:center;color:var(--muted)}
+.docno{font-weight:600;color:var(--pri);white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:700;border:1px solid;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:4px;display:inline-block}
+.filters{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:flex-end;padding:16px;border-bottom:1px solid var(--line)}
+.fgrp{display:flex;align-items:center;gap:8px;font-size:13px;flex-wrap:wrap}
+.chip{height:34px;padding:0 14px;border-radius:17px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid #CBD2DC;background:#fff;color:var(--ink)}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.t{height:36px;border:1px solid var(--inp);border-radius:6px;padding:0 10px;font-size:13px;background:#fff;color:var(--ink);width:100%}
+textarea.t{height:auto;min-height:84px;padding:8px 10px;resize:vertical;line-height:1.5}
+.t:focus{outline:2px solid var(--pri-line);border-color:var(--pri)}
+.t.err{border-color:var(--danger);background:#FFF7F7}
+.t.ro{background:#F4F5F9;border-color:#E1E5EB}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.pager button{height:32px;min-width:32px;border:1px solid var(--inp);border-radius:6px;background:#fff;cursor:pointer;color:var(--ink);font-size:13px}
+.pager button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:22px;align-items:start}
+@media (max-width:1150px){.layout{grid-template-columns:minmax(0,1fr)}}
+.sec{padding:20px 22px;border-top:1px solid var(--line)}
+.sec:first-of-type{border-top:0}
+.sec-h{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:16px;font-weight:700;color:var(--pri)}
+.sec-h .n{width:26px;height:26px;border-radius:13px;background:var(--pri);color:#fff;font-size:13px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.sec-h .aside{margin-left:auto;font-size:12px;font-weight:400;color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 20px}
+@media (max-width:760px){.form-grid{grid-template-columns:minmax(0,1fr)}.fld.span2,.fld.span3{grid-column:auto}}
+.fld label{display:block;font-size:12.5px;font-weight:600;color:#344054;margin-bottom:6px}
+.fld.span2{grid-column:span 2}.fld.span3{grid-column:1/-1}
+.req{color:var(--danger)}
+.val{min-height:36px;padding:8px 0;font-size:14px;border-bottom:1px dashed var(--line);white-space:pre-wrap;word-break:break-word}
+.r{text-align:right!important;font-variant-numeric:tabular-nums}
+.items td{padding:6px 8px}.items th{padding:10px 8px}
+.items .t{height:34px}
+.items tfoot td{background:#F7F8FD;font-weight:700;border-top:2px solid var(--pri);padding:10px 8px}
+.iconbtn{width:32px;height:32px;border:1px solid var(--inp);border-radius:6px;background:#fff;cursor:pointer;color:var(--danger);font-size:16px;line-height:1}
+.iconbtn:disabled{opacity:.35;cursor:not-allowed}
+.addrow{margin-top:12px}
+.route{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:14px}
+.lv{padding:4px 10px;border-radius:12px;font-size:12px;font-weight:700;border:1px solid #D0D5DD;color:#98A2B3;background:#fff}
+.lv.on{border-color:var(--pri-line);background:var(--pri-soft);color:var(--pri)}
+.flow{display:flex;padding:20px 12px 16px;overflow-x:auto}
+.step{flex:1;min-width:120px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:0 4px}
+.step:not(:last-child)::after{content:'';position:absolute;top:20px;left:calc(50% + 24px);right:calc(-50% + 24px);height:2px;background:#CBD2DC}
+.step.done:not(:last-child)::after{background:var(--pri)}
+.node{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;border:2px solid #B8C1CE;color:#5B6678;position:relative;z-index:1}
+.step.ap .node{background:var(--ap)}.step.ac .node{background:var(--ac)}
+.step.done .node{border-color:var(--pri);color:var(--pri)}
+.step.cur .node{border-color:var(--pri);box-shadow:0 0 0 5px var(--pri-line);color:var(--pri)}
+.step.bad .node{border-color:var(--danger);box-shadow:0 0 0 5px #F8D3D0;color:var(--danger)}
+.step.na{opacity:.4}
+.step b{font-size:12.5px;margin-top:10px;line-height:1.3}
+.step small{font-size:11px;color:var(--muted2);margin-top:2px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);padding:0 20px 14px;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;border:1px solid #B8C1CE;vertical-align:-3px;margin-right:6px}
+.notice{margin-top:18px;padding:12px 16px;border-radius:8px;font-size:13px;display:flex;gap:10px;align-items:flex-start;border:1px solid}
+.notice.info{background:var(--pri-soft);border-color:var(--pri-line);color:var(--pri)}
+.notice.warn{background:#FFF7EB;border-color:#F5C98A;color:#8A4B00}
+.notice.bad{background:#FDECEC;border-color:#F3B5B5;color:var(--danger)}
+.notice.good{background:#E6F6EA;border-color:#B7E3C1;color:#146C2E}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--muted)}.kv b{font-variant-numeric:tabular-nums;text-align:right}
+.side .body{padding:6px 18px 14px}
+.hist{list-style:none;margin:0;padding:8px 18px 16px;max-height:520px;overflow:auto}
+.hist li{position:relative;padding:0 0 14px 20px;border-left:2px solid var(--line);margin-left:6px}
+.hist li:last-child{border-left-color:transparent}
+.hist li::before{content:'';position:absolute;left:-7px;top:2px;width:12px;height:12px;border-radius:6px;background:#fff;border:2px solid var(--pri)}
+.hist .a{font-size:13px;font-weight:600}
+.hist .m{font-size:12px;color:var(--muted2);margin-top:2px}
+.hist .c{font-size:12.5px;margin-top:4px;background:#F7F8FD;border-radius:6px;padding:6px 8px;color:var(--muted)}
+.diff{margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.diff{grid-template-columns:minmax(0,1fr)}}
+.stat{border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.stat span{display:block;font-size:12px;color:var(--muted)}
+.stat b{display:block;font-size:20px;margin-top:4px;font-variant-numeric:tabular-nums}
+.overlay{position:fixed;inset:0;background:rgba(27,36,51,.55);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
+.dlg{width:760px;max-width:100%;background:#fff;border-radius:14px;box-shadow:0 12px 40px rgba(27,36,51,.35);display:flex;flex-direction:column}
+.dlg.small{width:520px}
+.dlg-h{padding:22px 28px;border-bottom:1px solid #D7DDE6}
+.dlg-h h2{margin:0;font-size:22px;color:var(--pri)}
+.dlg-b{padding:24px 28px;display:flex;flex-direction:column;gap:16px}
+.dlg-f{padding:16px 28px;border-top:1px solid #D7DDE6;display:flex;justify-content:flex-end;gap:12px}
+.opt{display:flex;gap:12px;align-items:flex-start;cursor:pointer;border-radius:10px;padding:14px 16px;border:1px solid #B8C1CE;background:#fff}
+.opt.on{padding:13px 15px;border:2px solid var(--pri);background:var(--pri-soft)}
+.opt input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--pri);flex:none}
+.opt b{display:block;font-size:15px;font-weight:600}
+.opt span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.mini i{font-style:normal;font-size:11.5px;padding:3px 9px;border-radius:10px;border:1px solid #B8C1CE}
+.mini i.ap{background:var(--ap)}.mini i.ac{background:var(--ac)}
+#toast{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));left:calc(16px + env(safe-area-inset-left,0px));align-items:flex-end;pointer-events:none;display:flex;flex-direction:column;gap:8px;z-index:60}
+.toast{background:#1B2433;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.2);max-width:420px}
+.toast.bad{background:var(--danger)}
+.foot{margin-top:28px;font-size:12px;color:var(--muted2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;color:var(--pri);cursor:pointer;font-size:12px;text-decoration:underline;padding:0}
+.toast{pointer-events:auto}
+</style>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+<script>
+// ---------- Master data ----------
+const USERS = {
+  b1:  { name: 'Mr. Jirach Chaiyotha', role: 'Buyer', empId: '26010063', position: 'Procurement Engineer', division: 'C-PM-PP2' },
+  b2:  { name: 'Ms. Waranya Chaiwat', role: 'Buyer', empId: '26010021', position: 'Senior Buyer', division: 'C-PM-PP1' },
+  dm1: { name: 'Mr. Somchai Rattanakul', role: 'DM', title: 'DM Procurement' },
+  dm2: { name: 'Mr. Nattapong Srisuk', role: 'DM', title: 'DM Procurement' },
+  vp1: { name: 'Mr. Wichai Prasertsri', role: 'VP', title: 'VP Procurement' },
+  vp2: { name: 'Ms. Apinya Rojanasakul', role: 'VP', title: 'VP Procurement' },
+  dmd1:{ name: 'Mr. Prasert Thongdee', role: 'DMD', title: 'DMD' },
+  dmd2:{ name: 'Ms. Kanokwan Meesuk', role: 'DMD', title: 'DMD' },
+  md1: { name: 'Mr. Kittipong Wongsawat', role: 'MD', title: 'MD' },
+  ac1: { name: 'Ms. Siriporn Anantachai', role: 'AC', title: 'Accounting (MD-FA-AC)' },
+  ac2: { name: 'Ms. Pimchanok Lertpanya', role: 'AC', title: 'Accounting (MD-FA-AC)' }
+};
+// Approval authority (sequential). Basis = total amount Inc. VAT 7%.
+const LEVELS = [
+  { key: 'DM',  label: 'DM Procurement', limit: 100000,   rule: '< 100,000 THB',   def: 'dm1' },
+  { key: 'VP',  label: 'VP Procurement', limit: 500000,   rule: '< 500,000 THB',   def: 'vp1' },
+  { key: 'DMD', label: 'DMD',            limit: 2000000,  rule: '< 2,000,000 THB', def: 'dmd1' },
+  { key: 'MD',  label: 'MD',             limit: Infinity, rule: '≥ 2,000,000 THB', def: 'md1' }
+];
+const DIVISIONS = ['C-PM-PP1', 'C-PM-PP2', 'C-PM-PP3', 'C-PM-MP'];
+const VENDORS = ['DHL Global Forwarding (Thailand) Ltd.', 'Kerry Logistics (Thailand) Co., Ltd.', 'Nippon Express (Thailand) Co., Ltd.', 'Kintetsu World Express (Thailand) Co., Ltd.', 'DB Schenker (Thailand) Ltd.', 'Expeditors (Thailand) Ltd.'];
+const GLS = ['5101020 – Freight & Transportation', '5101030 – Import Duty & Customs', '5101040 – Port & Terminal Charges', '5101050 – Demurrage & Detention', '5101060 – Inspection & Survey Fee'];
+const TYPES = {
+  1: { short: 'Type 1', name: 'Advance Payment', bg: '#E3F0FD', fg: '#0B5CAD', dot: '#1E88E5' },
+  2: { short: 'Type 2', name: 'Advance Payment & Advance Clearance', bg: '#EFEAFB', fg: '#5B3BA8', dot: '#8E6BE0' }
+};
+const S = {
+  DRAFT: 'Draft', WAPP: 'Waiting Approval', REJ: 'Rejected', WACK: 'Waiting Accounting',
+  WCLR: 'Waiting Clearance', CDRAFT: 'Clearance Draft', CWAPP: 'Clearance Waiting Approval',
+  CREJ: 'Clearance Rejected', CWACK: 'Clearance Waiting Accounting', DONE: 'Completed'
+};
+const AC_PHASE = [S.WCLR, S.CDRAFT, S.CWAPP, S.CREJ, S.CWACK];
+const SC = { // status colors: bg, border, fg
+  [S.DRAFT]: ['#F1F3F7', '#D0D5DD', '#344054'], [S.CDRAFT]: ['#F1F3F7', '#D0D5DD', '#344054'],
+  [S.WAPP]: ['#EEF0FF', '#C5CAF5', '#27298A'], [S.CWAPP]: ['#EEF0FF', '#C5CAF5', '#27298A'],
+  [S.WACK]: ['#FFF0DB', '#F5C98A', '#8A4B00'], [S.CWACK]: ['#FFF0DB', '#F5C98A', '#8A4B00'],
+  [S.WCLR]: ['#E3F0FD', '#A9CDF3', '#0B5CAD'],
+  [S.REJ]: ['#FDECEC', '#F3B5B5', '#B42318'], [S.CREJ]: ['#FDECEC', '#F3B5B5', '#B42318'],
+  [S.DONE]: ['#E6F6EA', '#B7E3C1', '#146C2E'],
+  Waiting: ['#F1F3F7', '#D0D5DD', '#5B6678'], Pending: ['#EEF0FF', '#C5CAF5', '#27298A'],
+  Approved: ['#E6F6EA', '#B7E3C1', '#146C2E'], Acknowledged: ['#E6F6EA', '#B7E3C1', '#146C2E'],
+  Rejected: ['#FDECEC', '#F3B5B5', '#B42318'], Returned: ['#FDECEC', '#F3B5B5', '#B42318']
+};
+
+// ---------- Helpers ----------
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const r2 = (n) => Math.round((Number(n) || 0) * 100) / 100;
+const money = (n) => r2(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const fdate = (iso, time) => { if (!iso) return '-'; const d = new Date(iso); const p = (x) => String(x).padStart(2, '0');
+  return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear() + (time === false ? '' : ' ' + p(d.getHours()) + ':' + p(d.getMinutes())); };
+let CLOCK = null; // seed data uses a fixed clock
+const now = () => CLOCK || new Date().toISOString();
+const uname = (id) => (USERS[id] ? USERS[id].name : id || '-');
+const badge = (txt) => { const c = SC[txt] || SC.Waiting; return '<span class="badge" style="background:' + c[0] + ';border-color:' + c[1] + ';color:' + c[2] + '">' + esc(txt) + '</span>'; };
+const typeBadge = (t) => { const x = TYPES[t]; return '<span class="badge" title="' + esc(x.name) + '" style="background:' + x.bg + ';border-color:' + x.bg + ';color:' + x.fg + '"><span class="dot" style="background:' + x.dot + '"></span>' + x.short + '</span>'; };
+const docLabel = (d) => d.no + (d.rev > 0 ? ' R' + d.rev : '');
+const calc = (items) => { let ex = 0, vat = 0; items.forEach((it) => { const a = r2(it.amt); ex += a; vat += r2(a * 0.07); }); return { ex: r2(ex), vat: r2(vat), inc: r2(ex + vat) }; };
+const emptyItem = () => ({ desc: '', gl: '', cc: '', io: '', amt: '' });
+
+// ---------- Engine ----------
+function chain(total, prev) {
+  return LEVELS.filter((l, i) => i === 0 || total >= LEVELS[i - 1].limit).map((l) => {
+    const p = (prev || []).find((a) => a.level === l.key);
+    return { level: l.key, user: p ? p.user : l.def, status: 'Waiting', at: '', comment: '' };
+  });
+}
+const isAC = (d) => AC_PHASE.includes(d.status) || (d.status === S.DONE && d.type === 2);
+const flowOf = (d) => (isAC(d) && d.clr ? d.clr : d); // object holding items/approvers/ack for the active phase
+function log(d, by, action, comment) { d.history.unshift({ at: now(), by, action, rev: d.rev, comment: comment || '' }); d.updatedAt = now(); }
+function validate(d, phaseAC) {
+  const errs = [];
+  if (!phaseAC) {
+    const i = d.info;
+    [['requester', 'Requester Name'], ['empId', 'Employee ID'], ['position', 'Position'], ['division', 'Division Indicator'], ['vendor', 'Vendor Name'], ['details', 'Describe the details']]
+      .forEach(([k, l]) => { if (!String(i[k] || '').trim()) errs.push({ path: 'info.' + k, msg: l }); });
+  }
+  const pre = phaseAC ? 'clr.' : '';
+  const items = phaseAC ? d.clr.items : d.items;
+  if (!items.length) errs.push({ path: '', msg: 'At least one expense row' });
+  items.forEach((it, n) => {
+    ['desc', 'gl', 'cc'].forEach((k) => { if (!String(it[k] || '').trim()) errs.push({ path: pre + 'items.' + n + '.' + k, msg: 'Row ' + (n + 1) + ' ' + { desc: 'Description', gl: 'GL Account', cc: 'Cost Center' }[k] }); });
+    if (!(Number(it.amt) > 0)) errs.push({ path: pre + 'items.' + n + '.amt', msg: 'Row ' + (n + 1) + ' Amount' });
+  });
+  return errs;
+}
+const ENGINE = {
+  submit(d, u) {
+    const f = flowOf(d);
+    f.approvers = chain(calc(f.items).inc, f.approvers);
+    f.approvers[0].status = 'Pending';
+    f.ack = { status: '', by: '', at: '', comment: '' };
+    d.status = isAC(d) ? S.CWAPP : S.WAPP;
+    log(d, u, isAC(d) ? 'Submitted Advance Clearance for approval' : 'Submitted Advance Payment for approval');
+  },
+  approve(d, u, c) {
+    const f = flowOf(d), i = f.approvers.findIndex((a) => a.status === 'Pending'), a = f.approvers[i];
+    Object.assign(a, { status: 'Approved', at: now(), comment: c || '', by: u });
+    const lvl = LEVELS.find((l) => l.key === a.level).label;
+    if (f.approvers[i + 1]) f.approvers[i + 1].status = 'Pending';
+    else { d.status = isAC(d) ? S.CWACK : S.WACK; f.ack = { status: 'Pending', by: '', at: '', comment: '' }; }
+    log(d, u, 'Approved (' + lvl + ')', c);
+  },
+  reject(d, u, c) {
+    const f = flowOf(d), a = f.approvers.find((x) => x.status === 'Pending');
+    Object.assign(a, { status: 'Rejected', at: now(), comment: c || '', by: u });
+    const ac = isAC(d);
+    d.status = ac ? S.CREJ : S.REJ;
+    log(d, u, 'Rejected (' + LEVELS.find((l) => l.key === a.level).label + ') – returned to Buyer', c);
+  },
+  ack(d, u, c) {
+    const f = flowOf(d), ac = isAC(d);
+    f.ack = { status: 'Acknowledged', by: u, at: now(), comment: c || '' };
+    d.status = ac || d.type === 1 ? S.DONE : S.WCLR;
+    log(d, u, 'Accounting acknowledged ' + (ac ? 'Advance Clearance' : 'Advance Payment') + (d.status === S.DONE ? ' – Completed' : ''), c);
+  },
+  ackReturn(d, u, c) {
+    const f = flowOf(d), ac = isAC(d);
+    f.ack = { status: 'Returned', by: u, at: now(), comment: c || '' };
+    d.status = ac ? S.CREJ : S.REJ;
+    log(d, u, 'Accounting returned ' + (ac ? 'Advance Clearance' : 'Advance Payment') + ' to Buyer', c);
+  },
+  changeRev(d, u, c) {
+    const ac = isAC(d), f = flowOf(d);
+    d.revs.push({ rev: d.rev, at: now(), phase: ac ? 'Advance Clearance' : 'Advance Payment', status: d.status, total: calc(f.items).inc, snap: clone({ info: d.info, items: d.items, approvers: d.approvers, clr: d.clr }) });
+    d.rev += 1;
+    f.approvers.forEach((a) => Object.assign(a, { status: 'Waiting', at: '', comment: '', by: '' }));
+    f.ack = { status: '', by: '', at: '', comment: '' };
+    d.status = ac ? S.CDRAFT : S.DRAFT;
+    log(d, u, 'Changed revision to R' + d.rev, c);
+  },
+  startClr(d, u) {
+    d.clr = { remark: '', items: clone(d.items), approvers: chain(calc(d.items).inc, d.approvers).map((a) => ({ ...a })), ack: { status: '', by: '', at: '', comment: '' } };
+    d.status = S.CDRAFT;
+    log(d, u, 'Created Advance Clearance');
+  }
+};
+function pendingWith(d) {
+  const f = flowOf(d);
+  if ([S.WAPP, S.CWAPP].includes(d.status)) { const a = f.approvers.find((x) => x.status === 'Pending'); return a ? uname(a.user) + ' (' + LEVELS.find((l) => l.key === a.level).label + ')' : '-'; }
+  if ([S.WACK, S.CWACK].includes(d.status)) return 'Accounting (MD-FA-AC)';
+  if (d.status === S.DONE) return '-';
+  return uname(d.createdBy) + ' (Buyer)';
+}
+function isMyTask(d, u) {
+  const f = flowOf(d), role = USERS[u].role;
+  if ([S.WAPP, S.CWAPP].includes(d.status)) { const a = f.approvers.find((x) => x.status === 'Pending'); return !!a && a.user === u; }
+  if ([S.WACK, S.CWACK].includes(d.status)) return role === 'AC';
+  return d.createdBy === u && [S.DRAFT, S.REJ, S.WCLR, S.CDRAFT, S.CREJ].includes(d.status);
+}
+
+// ---------- Store ----------
+const KEY = 'apff.v1';
+let store;
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.docs) return s; } catch (e) {}
+  return seed();
+}
+function newDoc(type, u) {
+  const U = USERS[u];
+  return { id: '', no: '', rev: 0, type, status: S.DRAFT, createdBy: u, createdAt: '', updatedAt: '',
+    info: { requester: U.name, empId: U.empId || '', position: U.position || '', division: U.division || '', vendor: '', details: '' },
+    items: [emptyItem()], approvers: chain(0), ack: { status: '', by: '', at: '', comment: '' }, clr: null, history: [], revs: [] };
+}
+function seed() {
+  const st = { seq: 0, docs: [], user: 'b1' };
+  const mk = (when, type, u, info, items) => {
+    CLOCK = when; const d = newDoc(type, u); st.seq += 1;
+    d.id = 'd' + st.seq; d.no = 'AP-2026-' + String(st.seq).padStart(4, '0'); d.createdAt = when;
+    Object.assign(d.info, info); d.items = items; d.approvers = chain(calc(items).inc);
+    log(d, u, 'Created Advance Payment (' + TYPES[type].name + ')'); st.docs.unshift(d); return d;
+  };
+  const run = (d, when, act, u, c) => { CLOCK = when; ENGINE[act](d, u, c); };
+  const it = (desc, gl, cc, io, amt) => ({ desc, gl, cc, io, amt });
+
+  let d = mk('2026-10-01T09:10:00', 1, 'b1', { vendor: VENDORS[0], details: 'ค่าใช้จ่ายล่วงหน้าสำหรับนำเข้า Spare parts ของ Compressor (B/L DHL-55120)' },
+    [it('Ocean freight Rotterdam → Laem Chabang', GLS[0], '20300110', 'IO-26-PP2-0012', 52000), it('Terminal handling charge', GLS[2], '20300110', 'IO-26-PP2-0012', 18000)]);
+  run(d, '2026-10-01T09:30:00', 'submit', 'b1'); run(d, '2026-10-02T10:05:00', 'approve', 'dm1', 'OK');
+  run(d, '2026-10-03T14:20:00', 'ack', 'ac1', 'Paid via cheque 0041122');
+
+  d = mk('2026-10-06T08:45:00', 2, 'b1', { vendor: VENDORS[1], details: 'Advance สำหรับพิธีการศุลกากรและค่าภาษีอากรขาเข้า Heat Exchanger Tube Bundle' },
+    [it('Import duty (estimate)', GLS[1], '20300110', 'IO-26-PP2-0019', 240000), it('Customs clearance service', GLS[0], '20300110', 'IO-26-PP2-0019', 45000), it('Port charges', GLS[2], '20300110', 'IO-26-PP2-0019', 35000)]);
+  run(d, '2026-10-06T09:00:00', 'submit', 'b1'); run(d, '2026-10-07T11:00:00', 'approve', 'dm1');
+  run(d, '2026-10-08T15:30:00', 'approve', 'vp1', 'Approved, please clear within 30 days'); run(d, '2026-10-09T10:00:00', 'ack', 'ac2');
+
+  d = mk('2026-10-14T13:00:00', 1, 'b2', { requester: USERS.b2.name, empId: USERS.b2.empId, position: USERS.b2.position, division: USERS.b2.division, vendor: VENDORS[2], details: 'Air freight สำหรับ Catalyst (urgent shipment) จาก Osaka' },
+    [it('Air freight KIX → BKK (chartered)', GLS[0], '20300120', 'IO-26-PP1-0007', 980000), it('Dangerous goods handling', GLS[2], '20300120', 'IO-26-PP1-0007', 220000)]);
+  run(d, '2026-10-14T13:30:00', 'submit', 'b2'); run(d, '2026-10-15T09:20:00', 'approve', 'dm1');
+
+  d = mk('2026-10-16T10:00:00', 1, 'b1', { vendor: VENDORS[4], details: 'ค่า Demurrage container ค้างท่า 12 วัน' },
+    [it('Demurrage 2 x 40HC', GLS[3], '20300110', '', 64000)]);
+  run(d, '2026-10-16T10:15:00', 'submit', 'b1'); run(d, '2026-10-17T16:40:00', 'reject', 'dm1', 'กรุณาแนบใบแจ้งหนี้จากสายเรือ และแยกค่า Detention');
+
+  d = mk('2026-10-12T09:00:00', 2, 'b2', { requester: USERS.b2.name, empId: USERS.b2.empId, position: USERS.b2.position, division: USERS.b2.division, vendor: VENDORS[3], details: 'Advance ค่าตรวจสอบสินค้าและค่าขนส่งภายในประเทศ' },
+    [it('Inspection & survey', GLS[4], '20300120', 'IO-26-PP1-0011', 30000), it('Inland trucking LCB → Map Ta Phut', GLS[0], '20300120', 'IO-26-PP1-0011', 25000)]);
+  run(d, '2026-10-12T09:10:00', 'submit', 'b2'); run(d, '2026-10-12T15:00:00', 'approve', 'dm2'); run(d, '2026-10-13T09:00:00', 'ack', 'ac1');
+  run(d, '2026-10-19T10:00:00', 'startClr', 'b2');
+  d.clr.remark = 'ค่าใช้จ่ายจริงต่ำกว่าประมาณการ คืนเงินส่วนต่างให้บริษัทฯ'; d.clr.items[0].amt = 27500; d.clr.items[1].amt = 24800;
+  run(d, '2026-10-19T10:30:00', 'submit', 'b2'); run(d, '2026-10-20T11:00:00', 'approve', 'dm2');
+
+  d = mk('2026-10-21T08:30:00', 2, 'b1', { vendor: VENDORS[5], details: 'Advance ค่าขนส่งและพิธีการศุลกากร Control Valve (Draft)' },
+    [it('Sea freight Busan → LCB', GLS[0], '20300110', 'IO-26-PP2-0025', 38000)]);
+  CLOCK = null;
+  return st;
+}
+
+// ---------- UI state ----------
+store = load();
+const ui = { view: 'list', docId: null, edit: false, buf: null, isNew: false, f: { type: '', status: '', q: '' }, page: 1, per: 10, errs: [] };
+const me = () => store.user;
+const getDoc = (id) => store.docs.find((d) => d.id === id);
+const cur = () => (ui.isNew ? ui.buf : getDoc(ui.docId));
+const src = () => (ui.edit ? ui.buf : cur());
+
+function toast(msg, bad) {
+  const el = document.createElement('div'); el.className = 'toast' + (bad ? ' bad' : ''); el.textContent = msg;
+  $('#toast').appendChild(el); setTimeout(() => el.remove(), 3800);
+}
+function go(view, id) {
+  ui.view = view; ui.docId = id || null; ui.edit = false; ui.buf = null; ui.isNew = false; ui.errs = [];
+  render(); window.scrollTo(0, 0);
+}
+
+// ---------- Render: shell ----------
+function render() {
+  const u = me(), U = USERS[u];
+  const opts = Object.keys(USERS).map((k) => '<option value="' + k + '"' + (k === u ? ' selected' : '') + '>' + esc(USERS[k].name) + ' — ' + esc(USERS[k].title || USERS[k].role) + '</option>').join('');
+  $('#app').innerHTML =
+    '<div class="top"><div class="brand"><b>E-Sourcing</b><span>Advance Payment\'s Page</span></div>' +
+    '<label class="pill" title="Switch user to simulate each role in the workflow"><span class="avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg></span>' +
+    '<span class="who"><small>Acting as</small><select data-act-change="user" aria-label="Acting as">' + opts + '</select></span></label></div>' +
+    '<div class="wrap">' + (ui.view === 'doc' && cur() ? renderDoc() : renderList()) +
+    '<div class="foot"><span>Prototype · data is stored in this browser only · signed in as ' + esc(U.name) + '</span><button class="linkbtn" data-act="reset">Reset demo data</button></div></div>';
+}
+
+// ---------- Render: list ----------
+function renderList() {
+  const u = me(), f = ui.f, q = f.q.trim().toLowerCase();
+  const match = (d) => (!f.type || d.type === Number(f.type)) && (!f.status || d.status === f.status) &&
+    (!q || [docLabel(d), TYPES[d.type].name, d.info.vendor, d.info.details, d.info.requester, d.info.division, d.status].join(' ').toLowerCase().includes(q));
+  const sorted = store.docs.slice().sort((a, b) => (b.updatedAt > a.updatedAt ? 1 : -1));
+  const my = sorted.filter((d) => isMyTask(d, u) && match(d));
+  const all = sorted.filter(match);
+  const pages = Math.max(1, Math.ceil(all.length / ui.per)); ui.page = Math.min(ui.page, pages);
+  const start = (ui.page - 1) * ui.per, slice = all.slice(start, start + ui.per);
+  const head = '<tr><th>Doc No.</th><th>Type</th><th>Vendor</th><th>Describe the details</th><th>Requester</th><th>Division</th><th class="r">Amount (Inc. VAT)</th><th>Pending With</th><th>Status</th><th>Updated</th></tr>';
+  const row = (d) => { const tot = calc(flowOf(d).items).inc;
+    return '<tr class="click" data-act="open" data-id="' + d.id + '"><td class="docno">' + esc(docLabel(d)) + '</td><td>' + typeBadge(d.type) + '</td><td>' + esc(d.info.vendor) + '</td><td style="max-width:320px">' + esc(d.info.details) + '</td><td>' + esc(d.info.requester) + '</td><td>' + esc(d.info.division) + '</td><td class="r">' + money(tot) + '</td><td>' + esc(pendingWith(d)) + '</td><td>' + badge(d.status) + '</td><td style="white-space:nowrap">' + fdate(d.updatedAt, false) + '</td></tr>'; };
+  const table = (rows, empty) => '<div class="tscroll"><table class="grid"><thead>' + head + '</thead><tbody>' + (rows.length ? rows.map(row).join('') : '<tr><td colspan="10" class="empty">' + empty + '</td></tr>') + '</tbody></table></div>';
+  const chip = (on, label, act, val) => '<button class="chip' + (on ? ' on' : '') + '" data-act="' + act + '" data-v="' + val + '">' + label + '</button>';
+  let pg = ''; for (let n = 1; n <= pages; n++) pg += '<button class="' + (n === ui.page ? 'on' : '') + '" data-act="page" data-v="' + n + '">' + n + '</button>';
+  return '<div class="pagehead"><div><h1>Advance Payment for Freight Forwarder</h1><div class="sub">ใบขอเบิกเงินทดรองจ่าย (Advance Payment) และเคลียร์เงินทดรองจ่าย (Advance Clearance) สำหรับ Freight Forwarder</div></div>' +
+    (USERS[u].role === 'Buyer' ? '<button class="btn pri round" data-act="create"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg>Create Advance Payment</button>' : '') + '</div>' +
+    '<div class="card"><div class="card-h">Task List</div>' +
+    '<div class="filters"><div class="fgrp">Type:' + chip(!f.type, 'All', 'ftype', '') + chip(f.type === '1', 'Type 1', 'ftype', '1') + chip(f.type === '2', 'Type 2', 'ftype', '2') + '</div>' +
+    '<label class="fgrp">Status:<select class="t" style="width:220px" data-act-change="fstatus"><option value="">All status</option>' + Object.values(S).map((s) => '<option' + (f.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></label>' +
+    '<label class="fgrp">Search:<input class="t" id="fq" style="width:300px;max-width:100%" data-act-input="fq" value="' + esc(f.q) + '" placeholder="Doc no., vendor, details…"></label></div>' +
+    '<div class="band">My Task<span class="count">' + my.length + '</span></div>' + table(my, 'No task requires your action.') +
+    '<div class="band" style="margin-top:14px">All Task<span class="count">' + all.length + '</span></div>' + table(slice, 'No matching entries found.') +
+    '<div class="pager"><div>Showing ' + (all.length ? start + 1 : 0) + ' to ' + Math.min(start + ui.per, all.length) + ' of ' + all.length + ' entries</div><div style="display:flex;gap:6px"><button data-act="page" data-v="' + Math.max(1, ui.page - 1) + '" aria-label="Previous page">‹</button>' + pg + '<button data-act="page" data-v="' + Math.min(pages, ui.page + 1) + '" aria-label="Next page">›</button></div></div></div>';
+}
+
+// ---------- Render: document ----------
+function actionsFor(d) {
+  const u = me(), creator = d.createdBy === u, role = USERS[u].role, b = [];
+  const f = flowOf(d), pend = (f.approvers || []).find((a) => a.status === 'Pending');
+  if (creator && (d.status === S.DRAFT || d.status === S.CDRAFT)) {
+    if (ui.edit) { b.push(['cancel', ui.isNew ? 'Cancel' : 'Cancel Edit', '']); b.push(['save', 'Save', '']); }
+    else b.push(['edit', 'Edit', '']);
+    b.push(['submit', d.status === S.CDRAFT ? 'Submit Clearance' : 'Submit', 'pri']);
+  }
+  if (creator && [S.WAPP, S.REJ, S.CWAPP, S.CREJ].includes(d.status)) b.push(['rev', 'Change Revision', 'pri']);
+  if (creator && d.status === S.WCLR) b.push(['startClr', 'Create Advance Clearance', 'pri']);
+  if ([S.WAPP, S.CWAPP].includes(d.status) && pend && pend.user === u) { b.push(['reject', 'Reject', 'danger']); b.push(['approve', 'Approve', 'ok']); }
+  if ([S.WACK, S.CWACK].includes(d.status) && role === 'AC') { b.push(['ackReturn', 'Reject (Return)', 'danger']); b.push(['ack', 'Acknowledge', 'ok']); }
+  return b;
+}
+function notice(d) {
+  const u = me(), f = flowOf(d);
+  if (ui.isNew) return '<div class="notice info">กรอกข้อมูลให้ครบถ้วน แล้วกด <b>Save</b> เพื่อบันทึกร่าง หรือ <b>Submit</b> เพื่อส่งอนุมัติ</div>';
+  if (d.status === S.REJ || d.status === S.CREJ) {
+    const a = f.approvers.find((x) => x.status === 'Rejected'); const by = a ? a : (f.ack.status === 'Returned' ? { user: f.ack.by, comment: f.ack.comment } : null);
+    return '<div class="notice bad"><div><b>Rejected by ' + esc(by ? uname(by.user || by.by) : '-') + '</b>' + (by && by.comment ? ' — “' + esc(by.comment) + '”' : '') +
+      (d.createdBy === u ? '<br>กด <b>Change Revision</b> เพื่อแก้ไขเอกสารและส่งอนุมัติใหม่ (R' + (d.rev + 1) + ')' : '') + '</div></div>';
+  }
+  if (d.status === S.DONE) return '<div class="notice good">Completed — accounting acknowledged on ' + fdate(f.ack.at) + '</div>';
+  if (d.status === S.WCLR) return '<div class="notice info">Advance Payment acknowledged by Accounting. ' + (d.createdBy === u ? 'กด <b>Create Advance Clearance</b> เพื่อเคลียร์ค่าใช้จ่ายจริง' : 'Waiting for Buyer to create Advance Clearance.') + '</div>';
+  const mine = isMyTask(d, u);
+  return '<div class="notice ' + (mine ? 'warn' : 'info') + '">' + (mine ? '<b>Action required:</b> this document is waiting for you.' : 'Pending with <b>' + esc(pendingWith(d)) + '</b>') + '</div>';
+}
+function flowSteps(d) {
+  const ap = [['Create', 'Buyer', 'ap'], ['Approval', 'Approver', 'ap'], ['Acknowledge', 'Accounting', 'ap']];
+  const ac = [['Advance Clearance', 'Buyer', 'ac'], ['Clearance Approval', 'Approver', 'ac'], ['Acknowledge', 'Accounting', 'ac']];
+  const steps = d.type === 2 ? ap.concat(ac) : ap.slice();
+  steps.push(['Completed', 'System', d.type === 2 ? 'ac' : 'ap']);
+  const idx = { [S.DRAFT]: 0, [S.REJ]: 0, [S.WAPP]: 1, [S.WACK]: 2, [S.WCLR]: 3, [S.CDRAFT]: 3, [S.CREJ]: 3, [S.CWAPP]: 4, [S.CWACK]: 5 }[d.status];
+  const at = d.status === S.DONE ? steps.length : idx;
+  const bad = d.status === S.REJ || d.status === S.CREJ;
+  return '<div class="card"><div class="card-h">Workflow<small>' + esc(TYPES[d.type].short + ' : ' + TYPES[d.type].name) + '</small></div><div class="flow">' +
+    steps.map((s, i) => { const cls = i < at ? 'done' : i === at ? (bad ? 'bad' : 'cur') : '';
+      return '<div class="step ' + s[2] + ' ' + cls + '"><div class="node">' + (i < at ? '✓' : bad && i === at ? '!' : i + 1) + '</div><b>' + s[0] + (bad && i === at ? '<br><span style="color:var(--danger)">(Returned)</span>' : '') + '</b><small>' + s[1] + '</small></div>'; }).join('') +
+    '</div><div class="legend"><span><i style="background:var(--ap)"></i>Advance Payment</span>' + (d.type === 2 ? '<span><i style="background:var(--ac)"></i>Advance Clearance</span>' : '') + '</div></div>';
+}
+function field(path, label, val, editable, opt) {
+  opt = opt || {}; const err = ui.errs.some((e) => e.path === path) ? ' err' : '';
+  let inp;
+  if (!editable) inp = '<div class="val">' + (esc(val) || '<span style="color:#98A2B3">-</span>') + '</div>';
+  else if (opt.select) inp = '<select class="t' + err + '" data-bind="' + path + '"><option value="">— Select —</option>' + opt.select.map((o) => '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+  else if (opt.area) inp = '<textarea class="t' + err + '" data-bind="' + path + '" placeholder="' + esc(opt.ph || '') + '">' + esc(val) + '</textarea>';
+  else inp = '<input class="t' + err + '" data-bind="' + path + '" value="' + esc(val) + '"' + (opt.list ? ' list="' + opt.list + '"' : '') + ' placeholder="' + esc(opt.ph || '') + '">';
+  return '<div class="fld ' + (opt.cls || '') + '"><label>' + label + (editable ? ' <span class="req">*</span>' : '') + '</label>' + inp + '</div>';
+}
+function itemsTable(scope, items, editable) {
+  const pre = scope === 'clr' ? 'clr.items.' : 'items.';
+  const t = calc(items);
+  const cell = (n, k, v, ph, list) => { const err = ui.errs.some((e) => e.path === pre + n + '.' + k) ? ' err' : '';
+    return editable ? '<input class="t' + err + '" data-bind="' + pre + n + '.' + k + '" value="' + esc(v) + '" placeholder="' + ph + '"' + (list ? ' list="' + list + '"' : '') + '>' : esc(v || '-'); };
+  const rows = items.map((it, n) => { const a = r2(it.amt), v = r2(a * 0.07);
+    const mw = (w) => (editable ? ' style="min-width:' + w + 'px"' : '');
+    return '<tr><td style="width:36px;color:var(--muted2)">' + (n + 1) + '</td><td' + mw(180) + '>' + cell(n, 'desc', it.desc, 'Description') + '</td><td' + mw(150) + '>' + cell(n, 'gl', it.gl, 'GL Account', 'gl-list') + '</td><td' + mw(100) + '>' + cell(n, 'cc', it.cc, 'Cost Center') + '</td><td' + mw(130) + '>' + cell(n, 'io', it.io, 'Budget Holder / IO') + '</td>' +
+      '<td class="r"' + mw(130) + '>' + (editable ? '<input class="t r' + (ui.errs.some((e) => e.path === pre + n + '.amt') ? ' err' : '') + '" type="number" min="0" step="0.01" data-bind="' + pre + n + '.amt" value="' + esc(it.amt) + '" placeholder="0.00">' : money(a)) + '</td>' +
+      '<td class="r" id="' + scope + '-vat-' + n + '">' + money(v) + '</td><td class="r" id="' + scope + '-inc-' + n + '">' + money(a + v) + '</td>' +
+      (editable ? '<td style="width:44px"><button class="iconbtn" data-act="delrow" data-scope="' + scope + '" data-n="' + n + '" title="Delete row" aria-label="Delete row ' + (n + 1) + '"' + (items.length < 2 ? ' disabled' : '') + '>×</button></td>' : '') + '</tr>'; }).join('');
+  return '<div class="tscroll"><table class="grid items"><thead><tr><th>#</th><th>Description</th><th>GL Account</th><th>Cost Center</th><th>Budget Holder / IO</th><th class="r">Amount (Ex VAT 7%)</th><th class="r">VAT 7%</th><th class="r">Amount (Inc VAT 7%)</th>' + (editable ? '<th></th>' : '') + '</tr></thead><tbody>' + rows + '</tbody>' +
+    '<tfoot><tr><td></td><td colspan="4">Total (THB)</td><td class="r" id="' + scope + '-tex">' + money(t.ex) + '</td><td class="r" id="' + scope + '-tvat">' + money(t.vat) + '</td><td class="r" id="' + scope + '-tinc">' + money(t.inc) + '</td>' + (editable ? '<td></td>' : '') + '</tr></tfoot></table></div>' +
+    (editable ? '<button class="btn sm addrow" data-act="addrow" data-scope="' + scope + '">+ Add Row</button>' : '');
+}
+function approverBlock(scope, f, editable) {
+  const total = calc(f.items).inc;
+  const list = editable ? chain(total, f.approvers) : f.approvers;
+  const route = '<div class="route">Approval route (Total Inc. VAT ' + money(total) + ' THB):' + LEVELS.map((l) => '<span class="lv' + (list.some((a) => a.level === l.key) ? ' on' : '') + '" title="' + esc(l.rule) + '">' + l.label + ' <span style="font-weight:400">' + esc(l.rule) + '</span></span>').join('') + '</div>';
+  const rows = list.map((a, n) => { const l = LEVELS.find((x) => x.key === a.level);
+    const people = Object.keys(USERS).filter((k) => USERS[k].role === a.level);
+    const who = editable ? '<select class="t" style="min-width:220px" data-bind="' + (scope === 'clr' ? 'clr.' : '') + 'approvers.' + n + '.user" data-level="' + a.level + '">' + people.map((k) => '<option value="' + k + '"' + (k === a.user ? ' selected' : '') + '>' + esc(USERS[k].name) + '</option>').join('') + '</select>' : esc(uname(a.user));
+    return '<tr><td>' + (n + 1) + '</td><td><b>' + l.label + '</b><div style="font-size:12px;color:var(--muted2)">' + esc(l.rule) + '</div></td><td>' + who + '</td><td>' + badge(a.status) + '</td><td style="white-space:nowrap">' + fdate(a.at) + '</td><td>' + esc(a.comment || '-') + '</td></tr>'; }).join('');
+  const k = f.ack || {}; const ackSt = k.status || 'Waiting';
+  const ackRow = '<tr style="background:#FAFBFD"><td>' + (list.length + 1) + '</td><td><b>Accounting</b><div style="font-size:12px;color:var(--muted2)">MD-FA-AC · Acknowledge</div></td><td>' + (k.by ? esc(uname(k.by)) : 'MD-FA-AC team') + '</td><td>' + badge(ackSt) + '</td><td style="white-space:nowrap">' + fdate(k.at) + '</td><td>' + esc(k.comment || '-') + '</td></tr>';
+  return route + '<div class="tscroll"><table class="grid"><thead><tr><th>Seq</th><th>Approval Level</th><th>Approver</th><th>Status</th><th>Date</th><th>Comment</th></tr></thead><tbody>' + rows + ackRow + '</tbody></table></div>';
+}
+function clrSummary(d, c) {
+  const adv = calc(d.items).inc, act = calc(c.items).inc, diff = r2(adv - act);
+  const lbl = diff > 0 ? 'Refund to company' : diff < 0 ? 'Additional payment to requester' : 'Balanced';
+  const col = diff > 0 ? '#146C2E' : diff < 0 ? '#B42318' : 'var(--ink)';
+  return '<div class="diff"><div class="stat"><span>Advance Payment (Inc VAT)</span><b>' + money(adv) + '</b></div><div class="stat"><span>Actual Expense (Inc VAT)</span><b>' + money(act) + '</b></div><div class="stat"><span>Difference · ' + lbl + '</span><b style="color:' + col + '">' + money(Math.abs(diff)) + '</b></div></div>';
+}
+function renderDoc() {
+  const d = cur(), v = src(), u = me();
+  const editAP = ui.edit && v.status === S.DRAFT, editAC = ui.edit && v.status === S.CDRAFT;
+  const showClr = d.type === 2 && v.clr;
+  const btns = actionsFor(d).map(([a, l, c]) => '<button class="btn ' + c + '" data-act="' + a + '">' + l + '</button>').join('');
+  const i = v.info;
+  let h = '<button class="back" data-act="list">‹ Back to Task List</button>' +
+    '<div class="pagehead"><div><h1>' + (ui.isNew ? 'New Advance Payment' : esc(docLabel(d))) + ' ' + typeBadge(d.type) + ' ' + badge(ui.isNew ? 'Draft' : d.status) + '</h1>' +
+    '<div class="sub">Advance Payment Application for Freight Forwarder · ' + esc(TYPES[d.type].name) + (ui.isNew ? '' : ' · Created ' + fdate(d.createdAt) + ' by ' + esc(uname(d.createdBy))) + '</div></div><div class="actions">' + btns + '</div></div>' +
+    notice(d) + flowSteps(d) + '<div class="layout"><div>';
+  h += '<div class="card"><div class="card-h">Advance Payment<small>Part 1 – 3</small></div>' +
+    '<div class="sec"><div class="sec-h"><span class="n">1</span>General Information</div><div class="form-grid">' +
+    field('info.requester', 'Requester Name', i.requester, editAP) + field('info.empId', 'Employee ID', i.empId, editAP) + field('info.position', 'Position', i.position, editAP) +
+    field('info.division', 'Division Indicator', i.division, editAP, { select: DIVISIONS }) + field('info.vendor', 'Vendor Name (Freight Forwarder)', i.vendor, editAP, { list: 'vendor-list', cls: 'span2', ph: 'Select or type vendor name' }) +
+    field('info.details', 'Describe the details', i.details, editAP, { area: true, cls: 'span3', ph: 'รายละเอียดวัตถุประสงค์ของการเบิกเงินทดรองจ่าย เช่น B/L, Shipment, PO' }) + '</div></div>' +
+    '<div class="sec"><div class="sec-h"><span class="n">2</span>Expense Details<span class="aside">VAT 7% calculated automatically</span></div>' + itemsTable('ap', v.items, editAP) + '</div>' +
+    '<div class="sec"><div class="sec-h"><span class="n">3</span>Approver<span class="aside">' + (editAP ? 'Route updates with total amount · approver selectable per level' : 'Sequential approval') + '</span></div><div id="appr-ap">' + approverBlock('ap', v, editAP) + '</div></div></div>';
+  if (showClr) {
+    h += '<div class="card"><div class="card-h ac">Advance Clearance<small>Part 4 – 5</small></div>' +
+      '<div class="sec"><div class="sec-h"><span class="n">4</span>Actual Expense Details</div>' +
+      '<div class="form-grid" style="margin-bottom:16px">' + field('clr.remark', 'Clearance remark', v.clr.remark, editAC, { area: true, cls: 'span3', ph: 'สรุปค่าใช้จ่ายจริง / เลขที่ใบเสร็จ / เหตุผลส่วนต่าง' }).replace(' <span class="req">*</span>', '') + '</div>' +
+      itemsTable('clr', v.clr.items, editAC) + '<div id="clr-sum">' + clrSummary(v, v.clr) + '</div></div>' +
+      '<div class="sec"><div class="sec-h"><span class="n">5</span>Clearance Approver</div><div id="appr-clr">' + approverBlock('clr', v.clr, editAC) + '</div></div></div>';
+  }
+  h += '</div><div class="side">' + sidePanel(d, v) + '</div></div>';
+  h += '<datalist id="vendor-list">' + VENDORS.map((x) => '<option value="' + esc(x) + '">').join('') + '</datalist><datalist id="gl-list">' + GLS.map((x) => '<option value="' + esc(x) + '">').join('') + '</datalist>';
+  return h;
+}
+function sidePanel(d, v) {
+  const t = calc(v.items);
+  let h = '<div class="card"><div class="card-h">Summary</div><div class="body" id="side-sum">' +
+    '<div class="kv"><span>Document No.</span><b>' + (ui.isNew ? '(assigned on save)' : esc(docLabel(d))) + '</b></div>' +
+    '<div class="kv"><span>Revision</span><b>R' + d.rev + '</b></div>' +
+    '<div class="kv"><span>Advance Ex VAT</span><b>' + money(t.ex) + '</b></div><div class="kv"><span>VAT 7%</span><b>' + money(t.vat) + '</b></div>' +
+    '<div class="kv"><span>Advance Inc VAT</span><b style="color:var(--pri)">' + money(t.inc) + ' THB</b></div>' +
+    (v.clr ? '<div class="kv"><span>Actual Expense Inc VAT</span><b>' + money(calc(v.clr.items).inc) + ' THB</b></div>' : '') +
+    '<div class="kv"><span>Pending With</span><b>' + esc(ui.isNew ? '-' : pendingWith(d)) + '</b></div></div></div>';
+  if (d.revs.length) h += '<div class="card"><div class="card-h">Revision History</div><div class="body">' + d.revs.slice().reverse().map((r) =>
+    '<div class="kv"><span>R' + r.rev + ' · ' + esc(r.phase) + '<br><small>' + esc(r.status) + ' · superseded ' + fdate(r.at, false) + '</small></span><b>' + money(r.total) + '</b></div>').join('') + '</div></div>';
+  h += '<div class="card"><div class="card-h">Activity Log</div>' + (d.history.length ? '<ul class="hist">' + d.history.map((x) =>
+    '<li><div class="a">' + esc(x.action) + '</div><div class="m">' + esc(uname(x.by)) + ' · ' + fdate(x.at) + ' · R' + x.rev + '</div>' + (x.comment ? '<div class="c">' + esc(x.comment) + '</div>' : '') + '</li>').join('') + '</ul>' : '<div class="body" style="padding:16px 18px;color:var(--muted);font-size:13px">No activity yet.</div>') + '</div>';
+  return h;
+}
+
+// ---------- Live calc while editing (no full re-render to keep focus) ----------
+function refreshCalc(scope) {
+  const v = ui.buf, items = scope === 'clr' ? v.clr.items : v.items;
+  items.forEach((it, n) => { const a = r2(it.amt), x = r2(a * 0.07); const e1 = $('#' + scope + '-vat-' + n), e2 = $('#' + scope + '-inc-' + n); if (e1) e1.textContent = money(x); if (e2) e2.textContent = money(a + x); });
+  const t = calc(items); $('#' + scope + '-tex').textContent = money(t.ex); $('#' + scope + '-tvat').textContent = money(t.vat); $('#' + scope + '-tinc').textContent = money(t.inc);
+  const f = scope === 'clr' ? v.clr : v;
+  f.approvers = chain(t.inc, f.approvers); // keep buffer in step with the displayed route
+  $('#appr-' + scope).innerHTML = approverBlock(scope, f, true);
+  if (scope === 'clr') $('#clr-sum').innerHTML = clrSummary(v, v.clr);
+  const side = $('.side'); if (side) side.innerHTML = sidePanel(cur(), v);
+}
+function setPath(obj, path, val) { const p = path.split('.'); let o = obj; for (let k = 0; k < p.length - 1; k++) o = o[p[k]]; o[p[p.length - 1]] = val; }
+
+// ---------- Modals ----------
+function modal(html) { $('#modal').innerHTML = '<div class="overlay" data-act="mclose-bg">' + html + '</div>'; const f = $('#modal [autofocus]'); if (f) f.focus(); }
+function closeModal() { $('#modal').innerHTML = ''; }
+function createModal(sel) {
+  const opt = (t, desc, flow) => '<label class="opt' + (sel === t ? ' on' : '') + '"><input type="radio" name="aptype" value="' + t + '"' + (sel === t ? ' checked' : '') + ' data-act-change="ptype"><span><b>' + TYPES[t].short + ' : ' + TYPES[t].name + '</b><span>' + desc + '</span><span class="mini">' + flow + '</span></span></label>';
+  const ap = '<i class="ap">Create</i><i class="ap">Approval</i><i class="ap">Accounting Ack</i>', ac = '<i class="ac">Advance Clearance</i><i class="ac">Approval</i><i class="ac">Accounting Ack</i>';
+  modal('<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgt"><div class="dlg-h"><h2 id="dlgt">Create Advance Payment</h2><div class="sub">เลือกประเภทเอกสารตาม Workflow เพื่อเริ่มสร้างใบขอเบิก</div></div><div class="dlg-b">' +
+    opt(1, 'เบิกเงินทดรองจ่ายให้ Freight Forwarder — จบที่ Accounting รับทราบ (Completed)', ap + '<i class="ap">Completed</i>') +
+    opt(2, 'เบิกเงินทดรองจ่าย และต้องทำ Advance Clearance เคลียร์ค่าใช้จ่ายจริงหลังจาก Accounting รับทราบ', ap + ac + '<i class="ac">Completed</i>') +
+    '</div><div class="dlg-f"><button class="btn" data-act="mclose">Cancel</button><button class="btn pri" data-act="docreate"' + (sel ? '' : ' disabled style="background:#E3E8EF;color:#5B6678;border-color:#E3E8EF;cursor:not-allowed"') + ' data-v="' + (sel || '') + '">Create</button></div></div>');
+}
+function commentModal(act, title, sub, okLabel, okCls, required) {
+  modal('<div class="dlg small" role="dialog" aria-modal="true" aria-labelledby="dlgt"><div class="dlg-h"><h2 id="dlgt">' + title + '</h2><div class="sub">' + sub + '</div></div><div class="dlg-b">' +
+    '<div class="fld"><label>Comment' + (required ? ' <span class="req">*</span>' : ' (optional)') + '</label><textarea class="t" id="mcomment" autofocus></textarea></div></div>' +
+    '<div class="dlg-f"><button class="btn" data-act="mclose">Cancel</button><button class="btn ' + okCls + '" data-act="mconfirm" data-v="' + act + '" data-req="' + (required ? 1 : 0) + '">' + okLabel + '</button></div></div>');
+}
+
+// ---------- Commands ----------
+function commitBuf() {
+  const d = cur(), b = ui.buf;
+  if (ui.isNew) {
+    store.seq += 1; b.id = 'd' + store.seq + '-' + Date.now().toString(36); b.no = 'AP-2026-' + String(store.seq).padStart(4, '0'); b.createdAt = now();
+    b.approvers = chain(calc(b.items).inc, b.approvers);
+    log(b, me(), 'Created Advance Payment (' + TYPES[b.type].name + ')');
+    store.docs.unshift(b); ui.isNew = false; ui.docId = b.id;
+    return b;
+  }
+  if (b.status === S.DRAFT) { d.info = b.info; d.items = b.items; d.approvers = chain(calc(b.items).inc, b.approvers); }
+  else d.clr = Object.assign(b.clr, { approvers: chain(calc(b.clr.items).inc, b.clr.approvers) });
+  log(d, me(), b.status === S.DRAFT ? 'Saved draft' : 'Saved Advance Clearance draft');
+  return d;
+}
+const COMMENT_ACTS = {
+  approve: ['Approve', 'ยืนยันการอนุมัติเอกสาร', 'Approve', 'ok', false],
+  reject: ['Reject', 'เอกสารจะถูกส่งกลับไปยัง Buyer เพื่อแก้ไข (Change Revision)', 'Reject', 'danger', true],
+  ack: ['Acknowledge', 'Accounting (MD-FA-AC) รับทราบและดำเนินการจ่าย/บันทึกบัญชี', 'Acknowledge', 'ok', false],
+  ackReturn: ['Reject (Return to Buyer)', 'ส่งเอกสารกลับไปยัง Buyer เพื่อแก้ไข', 'Reject', 'danger', true],
+  rev: ['Change Revision', 'สร้าง Revision ใหม่ สถานะการอนุมัติเดิมจะถูกล้าง และเอกสารกลับเป็น Draft เพื่อแก้ไข', 'Change Revision', 'pri', true]
+};
+function doAction(act, comment) {
+  const d = cur(); const u = me();
+  const map = { approve: 'approve', reject: 'reject', ack: 'ack', ackReturn: 'ackReturn', rev: 'changeRev' };
+  ENGINE[map[act]](d, u, comment);
+  save(); closeModal();
+  if (act === 'rev') { ui.edit = true; ui.buf = clone(d); toast('Changed to revision R' + d.rev + ' – document is editable'); }
+  else { ui.edit = false; toast({ approve: 'Approved', reject: 'Rejected – returned to Buyer', ack: 'Acknowledged', ackReturn: 'Returned to Buyer' }[act] + ' · ' + docLabel(d)); }
+  render();
+}
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act;
+  if (a === 'mclose-bg') { if (e.target === el) closeModal(); return; }
+  if (a === 'mclose') return closeModal();
+  if (a === 'list') return go('list');
+  if (a === 'open') return go('doc', el.dataset.id);
+  if (a === 'ftype') { ui.f.type = el.dataset.v; ui.page = 1; return render(); }
+  if (a === 'page') { ui.page = Number(el.dataset.v); return render(); }
+  if (a === 'create') return createModal(null);
+  if (a === 'docreate') { if (!el.dataset.v) return; closeModal(); ui.view = 'doc'; ui.isNew = true; ui.edit = true; ui.errs = []; ui.buf = newDoc(Number(el.dataset.v), me()); render(); window.scrollTo(0, 0); return; }
+  if (a === 'reset') return modal('<div class="dlg small" role="dialog" aria-modal="true" aria-labelledby="dlgt"><div class="dlg-h"><h2 id="dlgt">Reset demo data</h2><div class="sub">ลบเอกสารทั้งหมดในเบราว์เซอร์นี้ และโหลดข้อมูลตัวอย่างใหม่</div></div><div class="dlg-f"><button class="btn" data-act="mclose">Cancel</button><button class="btn danger" data-act="doreset">Reset</button></div></div>');
+  if (a === 'doreset') { closeModal(); store = seed(); save(); go('list'); toast('Demo data reset'); return; }
+  if (a === 'addrow' || a === 'delrow') {
+    const items = el.dataset.scope === 'clr' ? ui.buf.clr.items : ui.buf.items;
+    if (a === 'addrow') items.push(emptyItem()); else if (items.length > 1) items.splice(Number(el.dataset.n), 1);
+    ui.errs = []; return render();
+  }
+  if (a === 'edit') { ui.edit = true; ui.buf = clone(cur()); const f = ui.buf.status === S.CDRAFT ? ui.buf.clr : ui.buf; f.approvers = chain(calc(f.items).inc, f.approvers); ui.errs = []; return render(); }
+  if (a === 'cancel') { if (ui.isNew) return go('list'); ui.edit = false; ui.buf = null; ui.errs = []; return render(); }
+  if (a === 'save') { commitBuf(); save(); ui.edit = false; ui.buf = null; ui.errs = []; toast('Saved · ' + docLabel(cur())); return render(); }
+  if (a === 'submit') {
+    const target = ui.edit ? ui.buf : cur(); const errs = validate(target, target.status === S.CDRAFT);
+    if (errs.length) {
+      if (!ui.edit) { ui.edit = true; ui.buf = clone(cur()); }
+      ui.errs = errs; render(); toast('Please complete: ' + errs.slice(0, 4).map((x) => x.msg).join(', ') + (errs.length > 4 ? ' …' : ''), true); return;
+    }
+    const d = ui.edit ? commitBuf() : cur();
+    ENGINE.submit(d, me()); save(); ui.edit = false; ui.buf = null; ui.errs = [];
+    toast('Submitted · pending with ' + pendingWith(d)); return render();
+  }
+  if (a === 'startClr') { const d = cur(); ENGINE.startClr(d, me()); save(); ui.edit = true; ui.buf = clone(d); toast('Advance Clearance created – enter actual expenses'); return render(); }
+  if (COMMENT_ACTS[a]) { const c = COMMENT_ACTS[a]; return commentModal(a, c[0] + ' · ' + esc(docLabel(cur())), c[1], c[2], c[3], c[4]); }
+  if (a === 'mconfirm') {
+    const c = $('#mcomment').value.trim();
+    if (el.dataset.req === '1' && !c) { $('#mcomment').classList.add('err'); $('#mcomment').focus(); return; }
+    return doAction(el.dataset.v, c);
+  }
+});
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.dataset.actInput === 'fq') { ui.f.q = el.value; ui.page = 1; const pos = el.selectionStart; render(); const n = $('[data-act-input="fq"]'); n.focus(); n.setSelectionRange(pos, pos); return; }
+  if (el.dataset.bind && ui.buf) {
+    setPath(ui.buf, el.dataset.bind, el.value);
+    if (el.classList.contains('err')) el.classList.remove('err');
+    if (/\.amt$/.test(el.dataset.bind)) refreshCalc(el.dataset.bind.startsWith('clr.') ? 'clr' : 'ap');
+  }
+});
+document.addEventListener('change', (e) => {
+  const el = e.target, a = el.dataset.actChange;
+  if (a === 'user') { store.user = el.value; save(); ui.edit = false; ui.buf = null; ui.errs = []; if (ui.isNew) go('list'); else render(); toast('Now acting as ' + USERS[el.value].name); return; }
+  if (a === 'fstatus') { ui.f.status = el.value; ui.page = 1; return render(); }
+  if (a === 'ptype') return createModal(Number(el.value));
+  if (el.dataset.bind && ui.buf && el.tagName === 'SELECT') setPath(ui.buf, el.dataset.bind, el.value);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('#modal').innerHTML) closeModal(); });
+// boot
+save(); render();
+</script>
